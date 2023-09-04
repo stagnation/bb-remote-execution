@@ -131,4 +131,29 @@ message ApplicationConfiguration {
   // https://github.com/bazelbuild/bazel/blob/master/src/main/java/com/google/devtools/build/lib/exec/local/XcodeLocalEnvProvider.java
   // https://www.smileykeith.com/2021/03/08/locking-xcode-in-bazel/
   map<string, string> apple_xcode_developer_directories = 14;
+
+  // Mount special filesystems in the input root. This is useful when
+  // running with `chroot`. some tools require access to special
+  // filesystems that are created when the operating system boots.
+  // An input root with a full userland implementation may need these.
+  // Typical choices are:
+  //     [{
+  //        mountpoint: 'proc',
+  //        source: '/proc',
+  //        filesystemType: 'proc',
+  //      }, {
+  //        mountpoint: 'sys',
+  //        source: '/sys',
+  //        filesystemType: 'sysfs',
+  //      }],
+  repeated MountInfo input_root_mounts = 15;
+}
+
+message MountInfo {
+    // Mount a filesystem in the input root, a relative path.
+    string mountpoint = 1;
+    // Source filesystem from the runner's operating system, absolute path.
+    string source = 2;
+    // Type of filesystem, see `mount`'s man page.
+    string filesystem_type = 3;
 }
