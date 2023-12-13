@@ -329,6 +329,11 @@ gomock(
         "TracerProvider",
     ],
     library = "@io_opentelemetry_go_otel_trace//:trace",
+    mock_names = {
+        "Span": "BareMockSpan",
+        "Tracer": "BareMockTracer",
+        "TracerProvider": "BareMockTracerProvider",
+    },
     package = "mock",
 )
 
@@ -363,6 +368,7 @@ go_library(
         ":storage_util.go",
         ":sync.go",
         ":trace.go",
+        "trace_wrap.go",
     ] + select({
         "@io_bazel_rules_go//go/platform:darwin": [
             ":fuse.go",
@@ -381,6 +387,7 @@ go_library(
         "//pkg/cleaner",
         "//pkg/filesystem",
         "//pkg/filesystem/access",
+        "@io_opentelemetry_go_otel_trace//embedded",
         "//pkg/filesystem/virtual",
         "//pkg/proto/buildqueuestate",
         "//pkg/proto/cas",
